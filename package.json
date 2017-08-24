@@ -1,0 +1,16 @@
+{
+  "name": "node-inspector-types",
+  "version": "0.1.0",
+  "scripts": {
+    "postinstall": "ts-node ."
+  },
+  "keywords": [],
+  "author": "Kelvin Jin (kelvinjin@google.com)",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^8.0.24",
+    "devtools-protocol": "0.0.496688",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.4.2"
+  }
+}
