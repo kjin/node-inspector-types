@@ -15,23 +15,23 @@ declare module "inspector" {
     /**
      * Create a new instance of the inspector.Session class. The inspector session needs to be connected through session.connect() before the messages can be dispatched to the inspector backend.
      */
-    new();
+    constructor();
 
     /**
      * Connects a session to the inspector back-end. An exception will be thrown if there is already a connected session established either through the API or by a front-end connected to the Inspector WebSocket port.
      */
-    connect();
+    connect(): void;
 
     /**
      * Immediately close the session. All pending message callbacks will be called with an error. session.connect() will need to be called to be able to send messages again. Reconnected session will lose all inspector state, such as enabled agents or configured breakpoints.
      */
-    disconnect();
+    disconnect(): void;
 
     /**
      * Posts a message to the inspector back-end. callback will be notified when a response is received. callback is a function that accepts two optional arguments - error and message-specific result.
      */
-    post(method: string, params?: Object, callback?: (err?: Error | null, params?: Object) => void);
-    post(method: string, callback?: (err?: Error | null, params?: Object) => void);
+    post(method: string, params?: Object, callback?: (err?: Error | null, params?: Object) => void): void;
+    post(method: string, callback?: (err?: Error | null, params?: Object) => void): void;
 
     // # postOverloads
 
@@ -49,15 +49,15 @@ declare module "inspector" {
    * @param host Host to listen on for inspector connections. Optional, defaults to what was specified on the CLI.
    * @param wait Block until a client has connected. Optional, defaults to false.
    */
-  export function open(port?: number, host?: string, wait?: boolean);
+  export function open(port?: number, host?: string, wait?: boolean): void;
 
   /**
    * Deactivate the inspector. Blocks until there are no active connections.
    */
-  export function close();
+  export function close(): void;
 
   /**
    * Return the URL of the active inspector, or undefined if there is none.
    */
-  export function url();
+  export function url(): string;
 }
