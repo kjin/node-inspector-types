@@ -1,9 +1,9 @@
 declare module "inspector" {
   import { EventEmitter } from 'events';
 
-  export interface InspectorNotificationMessage {
+  export interface InspectorNotification<T = any> {
     method: string,
-    params: Object
+    params: T
   }
 
   // # interfaceDefinitions

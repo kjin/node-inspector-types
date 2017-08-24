@@ -1,6 +1,7 @@
 import * as schema from './devtools-protocol-schema'
 import { flattenArgs, cap, isObjectReference, createDocs, resolveReference } from './utils'
 import { substitute } from './substitute'
+import { createListeners } from './event-emitter'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 
 const proto: schema.Schema = JSON.parse(readFileSync('./node_modules/devtools-protocol/json/js_protocol.json', 'utf8'));
@@ -45,15 +46,6 @@ const commandToPostFunctionsStrings = (command: schema.Command, domain: string):
   ]
 }
 
-const toEventEmitterFunctionStrings = (events: Array<{ event: string, args: Array<string> }>) => {
-  const createEmitStatement = event => `emit(event: "${event.event}"${event.args.length>0?', ':''}${event.args.join(', ')}): boolean;`
-  const createEmitBlock = events => `emit(event: string | symbol, ...args: any[]): boolean;\n${events.map(createEmitStatement).join('\n')}`
-  const createListenerFn = fnName => event => `${fnName}(event: "${event.event}", listener: (${event.args.join(', ')}) => void): this;`
-  const createListenerBlockFn = fnName => events => `${fnName}(event: string, listener: (...args: any[]) => void): this;\n${events.map(createListenerFn(fnName)).join('\n')}`
-  const createListeners = events => `${createListenerBlockFn('addListener')(events)}\n\n${createEmitBlock(events)}\n\n${['on','once','prependListener','prependOnceListener'].map(s=>createListenerBlockFn(s)(events)).join('\n\n')}`
-  return createListeners(events).split('\n')
-}
-
 const interfaceDefinitions: Array<string> = proto.domains
   .map(item => {
     const typePool = (item.types || []).concat([
@@ -96,20 +88,29 @@ const postOverloads: Array<string> = proto.domains
     .reduce(flattenArgs(''), []))
   .reduce(flattenArgs(), [])
 
-const eventOverloads: Array<string> = toEventEmitterFunctionStrings(proto.domains
+const eventOverloads: Array<string> = createListeners(proto.domains
   .map(item => {
     if (!item.events || item.events.length === 0) {
       return []
     }
     return item.events
       .map(event => ({
-        event: `${item.domain}.${event.name}`,
-        args: event.parameters && event.parameters.length > 0 ? [`message: { method: string, params: ${item.domain}.${cap(event.name)}EventDataType }`] : []
+        comment: createDocs(event),
+        name: `${item.domain}.${event.name}`,
+        args: event.parameters && event.parameters.length > 0 ? [{
+          name: 'message',
+          type: `InspectorNotification<${item.domain}.${cap(event.name)}EventDataType>`
+        }] : []
       }))
   })
   .reduce((acc, next) => acc.concat(next), [{
-    event: 'inspectorNotification',
-    args: ['message: InspectorNotificationMessage']
+    comment: [
+      '/**',
+      ' * Emitted when any notification from the V8 Inspector is received.',
+      ' */'
+    ],
+    name: 'inspectorNotification',
+    args: [{ name: 'message', type: 'InspectorNotification' }]
   }]))
 
 const template = readFileSync('./template.d.ts', 'utf8')
