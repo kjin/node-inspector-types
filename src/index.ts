@@ -88,7 +88,7 @@ const interfaceDefinitions: Array<string> = proto.domains
         .map(line => `  ${line}`),
       '}'
     ] : []
-  }).reduce(flattenArgs(), [])
+  }).reduce(flattenArgs(''), [])
 
 const postOverloads: Array<string> = proto.domains
   .map(item => item.commands

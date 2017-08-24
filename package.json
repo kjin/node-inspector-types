@@ -1,16 +1,19 @@
 {
   "name": "node-inspector-types",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "scripts": {
-    "postinstall": "ts-node ."
+    "build": "tsc && node build/src",
+    "prepare": "npm run build"
   },
   "keywords": [],
   "author": "Kelvin Jin (kelvinjin@google.com)",
   "license": "ISC",
-  "dependencies": {
-    "@types/node": "^8.0.24",
+  "devDependencies": {
+    "@types/node": "^8.0.25",
     "devtools-protocol": "0.0.496688",
-    "ts-node": "^3.3.0",
     "typescript": "^2.4.2"
-  }
+  },
+  "files": [
+    "inspector"
+  ]
 }
