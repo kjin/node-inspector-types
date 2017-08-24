@@ -26,6 +26,7 @@ const createEmitBlock = (events: Array<Event>): Array<string> => {
 const createListenerFn = (fnName: string) => (event: Event): Array<string> => {
   const argsStr = event.args.map(arg => `${arg.name}: ${arg.type}`).join(', ')
   return [
+    ...event.comment && event.comment.length > 0 ? [''] : [],
     ...event.comment || [],
     `${fnName}(event: "${event.name}", listener: (${argsStr}) => void): this;`,
     ...event.comment && event.comment.length > 0 ? [''] : []
@@ -52,5 +53,12 @@ export const createListeners = (events: Array<Event>): Array<string> => {
     ...createListenerBlockFn('prependListener')(events),
     '',
     ...createListenerBlockFn('prependOnceListener')(events)
-  ]
+  ].reduce((acc, next, index, arr) => { // removes consecutive empty lines
+    if ((index === arr.length - 1 || (acc.length > 0 && acc[acc.length - 1] === '')) && next === '') {
+      return acc
+    } else {
+      acc.push(next)
+      return acc
+    }
+  }, [])
 }

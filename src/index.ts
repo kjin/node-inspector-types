@@ -1,4 +1,5 @@
 import * as schema from './devtools-protocol-schema'
+import * as trimRight from 'trim-right'
 import { flattenArgs, cap, isObjectReference, createDocs, resolveReference } from './utils'
 import { substitute } from './substitute'
 import { createListeners } from './event-emitter'
@@ -118,7 +119,7 @@ const output = substitute(template, {
   interfaceDefinitions,
   postOverloads,
   eventOverloads
-})
+}).split('\n').map(line => trimRight(line)).join('\n')
 
 if (!existsSync('inspector')) {
   mkdirSync('inspector')

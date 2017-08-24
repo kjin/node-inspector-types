@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "build": "tsc && node build/src",
+    "build-dt": "npm run build && node build/src/d-t",
     "prepare": "npm run build"
   },
   "keywords": [],
@@ -11,6 +12,7 @@
   "devDependencies": {
     "@types/node": "^8.0.25",
     "devtools-protocol": "0.0.496688",
+    "trim-right": "^1.0.1",
     "typescript": "^2.4.2"
   },
   "files": [
