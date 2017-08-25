@@ -9,6 +9,8 @@ export const substitute = (file: string, args: { [propName: string]: Array<strin
         const [_0, prefix, argName] = matches
         if (args[argName]) {
           return args[argName].map(l => prefix + l)
+        } else {
+          return []
         }
       }
       return [line]

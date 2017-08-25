@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "build": "tsc && node build/src",
-    "build-dt": "npm run build && node build/src/d-t",
+    "build-dt": "tsc && node build/src/d-t",
     "prepare": "npm run build"
   },
   "keywords": [],
