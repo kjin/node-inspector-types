@@ -15,4 +15,4 @@ const inspectorDts = substitute(template, substituteArgs)
 if (!existsSync('inspector')) {
   mkdirSync('inspector')
 }
-writeFileSync('inspector/inspector.d.ts', inspectorDts, 'utf8')
+writeFileSync('inspector/index.d.ts', inspectorDts, 'utf8')
