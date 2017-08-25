@@ -44,8 +44,8 @@ declare module "inspector" {
     /**
      * Posts a message to the inspector back-end. callback will be notified when a response is received. callback is a function that accepts two optional arguments - error and message-specific result.
      */
-    post(method: string, params?: object, callback?: (err: Error, params?: object) => void): void;
-    post(method: string, callback?: (err: Error, params?: object) => void): void;
+    post(method: string, params?: {}, callback?: (err: Error, params?: {}) => void): void;
+    post(method: string, callback?: (err: Error, params?: {}) => void): void;
 
     // # postOverloads
 

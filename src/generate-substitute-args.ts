@@ -10,7 +10,7 @@ const toTypeString = (type: schema.Field | schema.ObjectReference, domain?: stri
     type.type === 'boolean'      ? 'boolean' :
     type.type === 'string'       ? 'string' :
     type.type === 'array'        ? `${toTypeString(type.items, domain)}[]` :
-    type.type === 'object'       ? 'object'
+    type.type === 'object'       ? '{}'
                                  : 'never'
 }
 
@@ -107,7 +107,7 @@ export const generateSubstituteArgs = (protocol: schema.Schema) => {
         ' */'
       ],
       name: 'inspectorNotification',
-      args: [{ name: 'message', type: 'InspectorNotification<object>' }]
+      args: [{ name: 'message', type: 'InspectorNotification<{}>' }]
     }]))
 
   return {
