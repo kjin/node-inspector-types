@@ -27,8 +27,8 @@ const propertyListToTypeString = (fields: Array<schema.Parameter> | null, domain
 
 const returnListToCallbackString = (commandName: string, returns: Array<schema.Parameter>, domain: string) => {
   return returns && returns.length > 0 ?
-    `(err: Error | null, params?: ${domain}.${cap(commandName)}ReturnType) => void` :
-    `(err?: Error) => void`
+    `(err: Error, params: ${domain}.${cap(commandName)}ReturnType) => void` :
+    `(err: Error) => void`
 }
 
 const commandToPostFunctionsStrings = (command: schema.Command, domain: string): Array<string> => {
