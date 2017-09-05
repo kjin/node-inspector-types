@@ -11,9 +11,5 @@
   "devDependencies": {
     "@types/node": "^8.0.25",
     "typescript": "^2.4.2"
-  },
-  "dependencies": {
-    "devtools-protocol": "0.0.499605",
-    "trim-right": "^1.0.1"
   }
 }

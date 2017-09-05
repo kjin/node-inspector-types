@@ -1,26 +1,39 @@
+// Usage: node generate-inspector [tag]
+// [tag] corresponds to a tag name in the node-core repository.
+
 import * as schema from './devtools-protocol-schema'
-import { flattenArgs, substitute } from './utils'
+import { flattenArgs, substitute, trimRight } from './utils'
 import { generateSubstituteArgs } from './generate-substitute-args'
-import * as trimRight from 'trim-right'
+import * as https from 'https'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { execSync } from 'child_process'
 
+// Input arguments
+const tag = process.argv[2] || process.version
+
+const PROTOCOL_URL = `https://raw.githubusercontent.com/nodejs/node/${tag}/deps/v8/src/inspector/js_protocol.json`
+
 const devToolsPath = `${__dirname}/../../node_modules/devtools-protocol`
 
-const json: string = readFileSync(`${devToolsPath}/json/js_protocol.json`, 'utf8')
-const protocol: schema.Schema = JSON.parse(json)
+function writeProtocolToFile(json: string) {
+  const protocol: schema.Schema = JSON.parse(json)
 
-const devtoolsPJson: string = readFileSync(`${devToolsPath}/package.json`, 'utf8')
-const protocolVersion = [`// DevTools Protocol Revision: ${JSON.parse(devtoolsPJson).version.split('.')[2]}`]
+  const template = readFileSync(`${__dirname}/inspector.d.ts.template`, 'utf8')
 
-const template = readFileSync(`${__dirname}/inspector.d.ts.template`, 'utf8')
+  const substituteArgs = generateSubstituteArgs(protocol)
+  const inspectorDts = substitute(template, substituteArgs).split('\n')
+    .map(line => trimRight(line))
+    .join('\n')
 
-const substituteArgs = {
-  protocolVersion,
-  ...generateSubstituteArgs(protocol)
+  writeFileSync('./inspector.d.ts', inspectorDts, 'utf8')
 }
-const inspectorDts = substitute(template, substituteArgs).split('\n')
-  .map(line => trimRight(line))
-  .join('\n')
 
-writeFileSync('./inspector.d.ts', inspectorDts, 'utf8')
+https.get(PROTOCOL_URL, (res) => {
+  const frames = []
+  res.on('data', (data) => {
+    frames.push(data)
+  })
+  res.on('end', () => {
+    writeProtocolToFile(Buffer.concat(frames).toString('utf8'))
+  })
+})

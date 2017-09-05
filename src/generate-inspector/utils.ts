@@ -25,13 +25,13 @@ export const flattenArgs = (inBetween?) => {
  * Returns whether an array exists and has elements.
  * @param a The array to check.
  */
-export const hasElements = a => a && a.length > 0
+export const hasElements = (a: Array<any>): boolean => a && a.length > 0
 
 /**
  * Returns the capitalized form of a given string.
  * @param s The string to capitalize
  */
-export const cap = s => s.charAt(0).toUpperCase() + s.slice(1)
+export const cap = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1)
 
 /**
  * Returns whether a given object is an ObjectReference.
@@ -99,4 +99,13 @@ export const substitute = (
     })
     .reduce(flattenArgs(), [])
     .join('\n')
+}
+
+export const trimRight = (s: string): string => {
+  // TODO(kjin): This is terrible
+  const numTrailingSpaces: number = s.split('').reverse().findIndex(c => c !== ' ')
+  if (numTrailingSpaces === -1) {
+    return ''
+  }
+  return s.slice(0, s.length - numTrailingSpaces)
 }
