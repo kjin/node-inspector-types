@@ -1,5 +1,11 @@
+// This file describes helper functions to create definitions for EventEmitter
+// prototype overloads.
+
 import { flattenArgs } from './utils'
 
+/**
+ * Information needed to generate definitions.
+ */
 export interface Event {
   comment?: Array<string>,
   name: string,
@@ -40,6 +46,12 @@ const createListenerBlockFn = (fnName: string) => (events: Array<Event>): Array<
   ]
 }
 
+/**
+ * Given an array of Event objects, return a set of type definitions for
+ * overloads of addListener, emit, on, once, prependListener, and
+ * prependOnceListener as an array of lines.
+ * @param events The array of Event objects to transform into type definitions.
+ */
 export const createListeners = (events: Array<Event>): Array<string> => {
   return [
     ...createListenerBlockFn('addListener')(events),
@@ -53,8 +65,11 @@ export const createListeners = (events: Array<Event>): Array<string> => {
     ...createListenerBlockFn('prependListener')(events),
     '',
     ...createListenerBlockFn('prependOnceListener')(events)
-  ].reduce((acc, next, index, arr) => { // removes consecutive empty lines
-    if ((index === arr.length - 1 || (acc.length > 0 && acc[acc.length - 1] === '')) && next === '') {
+  ].reduce((acc, next, index, arr) => {
+    // removes trailing and consecutive empty lines
+    const isLast = index === arr.length - 1
+    const followsEmptyLine = acc.length > 0 && acc[acc.length - 1] === ''
+    if ((isLast || followsEmptyLine) && next === '') {
       return acc
     } else {
       acc.push(next)

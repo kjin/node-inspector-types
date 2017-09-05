@@ -1,5 +1,5 @@
 node_modules
 npm-debug.log
-inspector
 build
-node
+scripts
+inspector.d.ts

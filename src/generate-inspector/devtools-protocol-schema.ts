@@ -1,3 +1,8 @@
+// This file describes the known structure of the JSON data files that back the
+// Chrome DevTools Protocol Docs, as in the below link.
+// https://github.com/ChromeDevTools/devtools-protocol/tree/master/json
+// This file is up-to-date as of r496688.
+
 export interface Documentable {
   description?: string,
   deprecated?: boolean,
@@ -9,19 +14,16 @@ export interface BaseType<T=string> {
 }
 
 export interface StringType extends BaseType<'string'> {
-  type: 'string',
   enum?: Array<string>
 }
 
 export interface ArrayType extends BaseType<'array'> {
-  type: 'array',
   items: Field,
   minItems?: number,
   maxItems?: number
 }
 
 export interface ObjectDefinition extends BaseType<'object'> {
-  type: 'object',
   properties?: Array<Parameter>
 }
 
@@ -29,7 +31,8 @@ export interface ObjectReference {
   $ref: string
 }
 
-export type TypeDefinition = BaseType<'any'|'integer'|'number'|'boolean'> | StringType | ArrayType | ObjectDefinition
+export type TypeDefinition = BaseType<'any'|'integer'|'number'|'boolean'> |
+  StringType | ArrayType | ObjectDefinition
 
 export type Type = TypeDefinition & Documentable & {
   id: string
@@ -58,6 +61,8 @@ export interface Event extends Documentable {
   description?: string
 }
 
+// It should be safe to load a devtools-protocol/json file and cast it to
+// this type.
 export interface Schema {
   version: {
     major: string,
@@ -71,5 +76,3 @@ export interface Schema {
     dependencies?: Array<string>,
   } & Documentable>
 }
-
-// const a: Type = { name: '', type: '', description: '' }

@@ -2,20 +2,18 @@
   "name": "node-inspector-types",
   "version": "0.0.1",
   "scripts": {
-    "build": "tsc && node build/src",
-    "build-dt": "tsc && node build/src/d-t",
-    "prepare": "npm run build"
+    "format": "mkdir -p scripts && cp -r src/* scripts && tslint --fix -p .",
+    "build": "npm run format && tsc && cp scripts/generate-inspector/*.template build/generator-inspector && node build/generator-inspector"
   },
   "keywords": [],
   "author": "Kelvin Jin (kelvinjin@google.com)",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^8.0.25",
-    "devtools-protocol": "0.0.496688",
-    "trim-right": "^1.0.1",
     "typescript": "^2.4.2"
   },
-  "files": [
-    "inspector"
-  ]
+  "dependencies": {
+    "devtools-protocol": "0.0.499605",
+    "trim-right": "^1.0.1"
+  }
 }
