@@ -1,13 +1,8 @@
-// Type definitions for inspector (built-in module in Node 8+)
-// Project: http://nodejs.org/
-// Definitions by: Kelvin Jin <https://github.com/kjin>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+// Type definitions for inspector
 
-// Note: These definitions are auto-generated.
+// These definitions are auto-generated.
 // Please see https://github.com/DefinitelyTyped/DefinitelyTyped/pull/19330
 // for more information.
-
-// # referenceMain
 
 /**
  * The inspector module provides an API for interacting with the V8 inspector.
@@ -44,8 +39,8 @@ declare module "inspector" {
         /**
          * Posts a message to the inspector back-end. callback will be notified when a response is received. callback is a function that accepts two optional arguments - error and message-specific result.
          */
-        post(method: string, params?: {}, callback?: (err: Error, params?: {}) => void): void;
-        post(method: string, callback?: (err: Error, params?: {}) => void): void;
+        post(method: string, params?: {}, callback?: (err: Error | null, params?: {}) => void): void;
+        post(method: string, callback?: (err: Error | null, params?: {}) => void): void;
 
         // # postOverloads
 
